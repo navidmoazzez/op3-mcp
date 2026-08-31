@@ -10,6 +10,22 @@
 zod stays on 3.x. The SDK's tool registration is built against it, and 4.x
 changes the shape the SDK reads.
 
+## 1.0.1, 2026-08-31
+
+README only, no code change.
+
+The 1.0.0 package went out carrying a README that still said the package was
+not published, with no badge row and the wrong License block. npm serves the
+README from the tarball, frozen at publish time, so a fix pushed to GitHub does
+nothing for the package page: it needs a new version.
+
+Also replaced the one relative link in the README. Relative links resolve
+against npmjs.com in the published copy and break there, so every link is now
+an absolute GitHub URL.
+
+Added `npm run check:published`, which compares the published tarball against
+the working tree and fails when the two have drifted.
+
 ## 1.0.0, 2026-08-31
 
 First release. 22 read-only tools over the OP3 API.

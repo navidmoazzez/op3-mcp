@@ -1,6 +1,6 @@
 {
   "name": "@thenavidm/op3-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "OP3 MCP server for Claude Code and AI agents. 22 tools for open podcast analytics: downloads, unique listeners, retention cohorts, four-level geography, app and device share, listening patterns, and episode benchmark curves. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible client.",
   "type": "module",
   "main": "./dist/index.js",
@@ -17,7 +17,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "check:published": "node scripts/check-published.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.30.0",

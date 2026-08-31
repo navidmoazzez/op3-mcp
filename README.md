@@ -1,7 +1,7 @@
 # OP3 MCP
 
 [![Stars](https://img.shields.io/github/stars/thenavidm/op3-mcp?style=flat&logo=github&label=Stars)](https://github.com/thenavidm/op3-mcp)
-[![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/thenavidm/op3-mcp/blob/main/LICENSE)
 [![npm](https://img.shields.io/npm/v/@thenavidm/op3-mcp?color=orange&label=npm)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
 [![Downloads](https://img.shields.io/npm/dm/@thenavidm/op3-mcp?color=green&label=downloads)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
 [![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
