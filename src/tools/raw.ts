@@ -15,17 +15,15 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { distribution } from "../analytics/rollup.js";
 import { safeTitle } from "../format/frame.js";
 import { REDACTION_NOTE, pseudonymise, redactDownloadRow, redactHitRow } from "../format/redact.js";
 import { buildWindow, describeWindow } from "../format/time.js";
 import { resolveIdentifier, toBase64FeedUrl } from "../api/identity.js";
-import type { ToolContext } from "./context.js";
-import { register } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
-export function registerRawTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const RAW_TOOLS: ToolDef[] = [
+  {
     name: "op3_query_downloads",
     description:
       "Raw download rows for a show, with every filter OP3 offers. This is the escape hatch for questions the aggregating tools do not cover. Prefer op3_show_downloads, op3_audience_summary, op3_geography or op3_app_share when they can answer the question, because raw rows are slow to fetch and expensive to reason over. Rows come back oldest first and OP3 offers no way to reverse that on this endpoint, so the limit takes the earliest rows in the window: to see recent activity, narrow the window with start rather than raising the limit. Per-listener identifiers are removed from the output.",
@@ -62,7 +60,7 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
           "Include a shortened, non-reversible listener label so rows can be told apart by listener. The full audienceId and hashedIpAddress are never returned either way.",
         ),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
       const limit = args.limit as number;
@@ -97,9 +95,9 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
           : {}),
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_query_hits",
     description:
       "Raw request rows from OP3's redirect log, across every show unless filtered by url. This is the lowest level OP3 exposes and it is a verification surface rather than an analytics one: it shows individual requests including user agents, byte ranges and the edge that served them. For questions about a specific show's performance, use the show tools instead.",
@@ -115,7 +113,7 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
       limit: z.number().int().min(1).max(1000).optional().default(50).describe("Rows to return."),
       newest_first: z.boolean().optional().default(true).describe("Sort most recent first."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const window = buildWindow((args.start as string | undefined) ?? "-1h", args.end as string | undefined);
 
       const page = await ctx.client.getHitsPage({
@@ -135,9 +133,9 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
         privacy: REDACTION_NOTE,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_verify_prefix",
     description:
       "Check whether OP3 is actually receiving downloads for a show, and say what is wrong when it is not. Run this first whenever the numbers are zero or a show cannot be found. It separates the three cases that look identical from the outside: the prefix was never added to the feed, it was added but no download has come through yet, or it is working and the answer is genuinely a small number.",
@@ -153,7 +151,7 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
         .default("-7d")
         .describe("How far back to look for any request at all."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const identifier = args.identifier as string;
       const lookback = args.lookback as string;
       const parsed = resolveIdentifier(identifier);
@@ -246,5 +244,5 @@ export function registerRawTools(server: McpServer, ctx: ToolContext): void {
         statsPageUrl: showUuid ? `https://op3.dev/show/${showUuid}` : undefined,
       };
     },
-  });
-}
+  },
+];

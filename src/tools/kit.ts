@@ -16,6 +16,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import type { ZodRawShape } from "zod";
+import type { ToolContext } from "./context.js";
 import { OP3Error } from "../api/errors.js";
 
 /** Read annotations. Identical across this server, because nothing writes. */
@@ -63,12 +64,21 @@ export type ToolDef = {
   name: string;
   description: string;
   schema: ZodRawShape;
-  handler: (args: Record<string, unknown>) => Promise<unknown>;
+  /**
+   * Deps arrive as the second argument rather than being closed over.
+   *
+   * That is what lets the same definitions serve two very different hosts. Run
+   * over stdio there is one context for the process. Run as a hosted connector
+   * there is one per request, because each caller brings their own OP3 token,
+   * and a context baked in at module load would hand every caller the first
+   * one's credentials.
+   */
+  handler: (args: Record<string, unknown>, ctx: ToolContext) => Promise<unknown>;
 };
 
 /**
- * Register one tool, wrapping the handler so a thrown error becomes a readable
- * result rather than a transport failure.
+ * Register one tool against a server, wrapping the handler so a thrown error
+ * becomes a readable result rather than a transport failure.
  *
  * `schema` is a plain `ZodRawShape` rather than a generic. Nothing here needs
  * per-tool argument types: every handler validates through zod at the boundary
@@ -76,7 +86,7 @@ export type ToolDef = {
  * that is immediately discarded, at the cost of the SDK's conditional callback
  * type becoming unresolvable.
  */
-export function register(server: McpServer, def: ToolDef): void {
+export function register(server: McpServer, def: ToolDef, ctx: ToolContext): void {
   server.registerTool(
     def.name,
     {
@@ -87,7 +97,7 @@ export function register(server: McpServer, def: ToolDef): void {
     },
     async (args: Record<string, unknown>): Promise<CallToolResult> => {
       try {
-        return ok(await def.handler(args));
+        return ok(await def.handler(args, ctx));
       } catch (error) {
         return fail(error);
       }

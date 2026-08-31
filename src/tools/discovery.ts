@@ -9,13 +9,11 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { safeTitle } from "../format/frame.js";
-import type { ToolContext } from "./context.js";
-import { register } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
-export function registerDiscoveryTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const DISCOVERY_TOOLS: ToolDef[] = [
+  {
     name: "op3_recent_transcripts",
     description:
       "Recently published episodes across all of OP3 that carry a podcast:transcript tag, newest first. Use it to find podcasts whose episodes are machine-readable, which is the shortlist worth building on for anything that needs to read transcripts rather than count downloads. Returns podcast guids you can pass straight to the show tools.",
@@ -36,7 +34,7 @@ export function registerDiscoveryTools(server: McpServer, ctx: ToolContext): voi
           "Look each podcast guid up to add the show title and uuid. Costs one request per distinct show, so leave it off for large limits.",
         ),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const limit = args.limit as number;
       const data = await ctx.client.getRecentTranscripts(limit);
       const episodes = data.rt?.episodes ?? [];
@@ -77,5 +75,5 @@ export function registerDiscoveryTools(server: McpServer, ctx: ToolContext): voi
         note: "This is OP3-wide, not one show. podcastGuid values here can be passed to op3_get_show or any other show tool.",
       };
     },
-  });
-}
+  },
+];

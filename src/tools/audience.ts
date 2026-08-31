@@ -17,7 +17,6 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   audienceSummary,
   episodeOverlap,
@@ -26,8 +25,8 @@ import {
 } from "../analytics/audience.js";
 import { REDACTION_NOTE } from "../format/redact.js";
 import { buildWindow, describeWindow } from "../format/time.js";
-import type { ToolContext } from "./context.js";
-import { register, truncationNote } from "./kit.js";
+import { truncationNote } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 const identifierArg = z
   .string()
@@ -53,8 +52,8 @@ const botsArg = z
     "Include downloads from known bots. Off by default, which matches how OP3's own download counts are computed.",
   );
 
-export function registerAudienceTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const AUDIENCE_TOOLS: ToolDef[] = [
+  {
     name: "op3_audience_summary",
     description:
       "Unique listeners against downloads for a show over any window. This is the number OP3's own dashboard and every rolled-up endpoint cannot give you: how many people, not how many requests. Read downloadsPerListener as the key figure, near 1 means each download is a distinct person, well above 1 means apps re-requesting the same file and every download number you see elsewhere is inflated by that factor.",
@@ -64,7 +63,7 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
       end: endArg,
       bots: botsArg,
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -88,9 +87,9 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_new_vs_returning",
     description:
       "Split a show's listeners in a window into first-time and returning, by comparing against a longer baseline period immediately before it. Answers whether a show is reaching new people or serving the same audience repeatedly. The baseline length matters: a short baseline calls a monthly listener new, so it defaults to four times the window and both sizes are reported so you can judge the answer.",
@@ -109,7 +108,7 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         ),
       bots: botsArg,
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
       const multiplier = args.baseline_multiplier as number;
@@ -155,9 +154,9 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_listener_retention",
     description:
       "Cohort carry-over between two periods: how much of the earlier period's audience showed up again in the later one. Returns two rates that answer different questions. retentionRate is the share of the old audience that came back, which measures whether the show holds people. carryOverShare is the share of the new period that is old faces, which measures whether the show is growing or recycling. A show can score well on one and badly on the other.",
@@ -177,7 +176,7 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         .describe("End of the later period. Defaults to now."),
       bots: botsArg,
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const bots = args.bots as boolean;
 
@@ -220,9 +219,9 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_episode_overlap",
     description:
       "Which episodes share an audience. For each pair of a show's busiest episodes, reports shared listeners, a symmetric similarity, and the share of the smaller episode's audience that also heard the other. Read the smaller side's share first: for one big episode and one small one the symmetric number is always near zero, while the smaller side's share tells you whether a spike brought genuinely new people or just gave the existing audience another download.",
@@ -242,7 +241,7 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         ),
       bots: botsArg,
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -268,5 +267,5 @@ export function registerAudienceTools(server: McpServer, ctx: ToolContext): void
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
-}
+  },
+];

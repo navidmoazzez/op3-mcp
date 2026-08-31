@@ -10,20 +10,19 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { episodeCurve, listeningPatterns, series } from "../analytics/trend.js";
 import { REDACTION_NOTE } from "../format/redact.js";
 import { buildWindow, describeWindow } from "../format/time.js";
 import { isEpisodeId } from "../api/identity.js";
-import type { ToolContext } from "./context.js";
-import { register, truncationNote } from "./kit.js";
+import { truncationNote } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 const identifierArg = z
   .string()
   .describe("An OP3 show uuid, a podcast:guid, or the show's RSS feed URL.");
 
-export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const TREND_TOOLS: ToolDef[] = [
+  {
     name: "op3_download_trend",
     description:
       "A show's downloads and unique listeners over time, bucketed by day, week or month, with a growth rate and the peak period. Growth compares the two halves of the window rather than first period against last, because podcast downloads are weekly-seasonal enough that comparing endpoints is close to noise.",
@@ -41,7 +40,7 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
       end: z.string().optional().describe("Window end. Defaults to now."),
       bots: z.boolean().optional().default(false).describe("Include known bots. Off by default."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -70,9 +69,9 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_listening_patterns",
     description:
       "When downloads happen, by hour of day and day of week, in UTC. Useful for choosing a publication slot. Read it as request timing rather than listening behaviour: a podcast app's scheduled background refresh fires on the app's schedule, not when a person pressed play, so the peaks partly reflect app defaults.",
@@ -86,7 +85,7 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
         .default(false)
         .describe("Include known bots. Leave off: bot traffic is often scheduled hourly and will flatten the pattern."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -105,9 +104,9 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
         truncationNote: truncationNote(pull.truncated, pull.stoppedBy, pull.rows.length),
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_episode_curve",
     description:
       "How one episode is tracking against the show's own median at the same age. Returns cumulative downloads by day after publication alongside the median across comparable episodes, plus a verdict. This is the only fair way to judge a recent episode: total downloads always favour older episodes because they have had longer to accumulate. Only episodes at least as old as the horizon go into the median, so a three-day-old episode does not drag a thirty-day comparison toward zero.",
@@ -136,7 +135,7 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
         .describe("How many other episodes form the median. More is steadier and slower."),
       bots: z.boolean().optional().default(false).describe("Include known bots. Off by default."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const episodeId = (args.episode_id as string).trim();
       const horizon = args.horizon_days as number;
@@ -256,5 +255,5 @@ export function registerTrendTools(server: McpServer, ctx: ToolContext): void {
         truncationNote: truncationNote(targetPull.truncated, targetPull.stoppedBy, targetPull.rows.length),
       };
     },
-  });
-}
+  },
+];

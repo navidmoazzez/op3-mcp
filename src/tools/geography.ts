@@ -12,13 +12,12 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { distinctSet, distribution, groupBy, percent } from "../analytics/rollup.js";
 import { REDACTION_NOTE } from "../format/redact.js";
 import { buildWindow, describeWindow } from "../format/time.js";
 import type { DownloadRow } from "../api/types.js";
-import type { ToolContext } from "./context.js";
-import { register, truncationNote } from "./kit.js";
+import { truncationNote } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 type Level = "continent" | "country" | "region" | "metro" | "timezone";
 
@@ -32,8 +31,8 @@ const KEY_OF: Record<Level, (row: DownloadRow) => string | undefined> = {
   timezone: (r) => r.timezone,
 };
 
-export function registerGeographyTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const GEOGRAPHY_TOOLS: ToolDef[] = [
+  {
     name: "op3_geography",
     description:
       "Where a show's downloads come from, at whichever level you ask for: continent, country, region (state or province), metro area, or timezone. Reports downloads and unique listeners side by side for each place, because one enthusiastic listener in a small market otherwise looks like a market. Region and metro are qualified by country, so Illinois and Israel do not merge.",
@@ -67,7 +66,7 @@ export function registerGeographyTools(server: McpServer, ctx: ToolContext): voi
         .default(false)
         .describe("Include downloads from known bots. Off by default."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
       const level = args.level as Level;
@@ -119,5 +118,5 @@ export function registerGeographyTools(server: McpServer, ctx: ToolContext): voi
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
-}
+  },
+];

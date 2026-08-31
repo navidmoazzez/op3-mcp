@@ -15,14 +15,13 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { distinctSet, distribution, groupBy, percent } from "../analytics/rollup.js";
 import { benchmarkApps } from "../analytics/trend.js";
 import { REDACTION_NOTE } from "../format/redact.js";
 import { buildWindow, describeWindow } from "../format/time.js";
 import type { DownloadRow } from "../api/types.js";
-import type { ToolContext } from "./context.js";
-import { register, truncationNote } from "./kit.js";
+import { truncationNote } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 const identifierArg = z
   .string()
@@ -37,8 +36,8 @@ const DIMENSION_OF: Record<Dimension, (row: DownloadRow) => string | undefined> 
   deviceName: (r) => r.deviceName,
 };
 
-export function registerAppTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const APP_TOOLS: ToolDef[] = [
+  {
     name: "op3_app_share",
     description:
       "Which podcast apps a show's audience uses, over any window you choose, with unique listeners alongside downloads. Prefer this over OP3's built-in app query when the window matters, because OP3's own endpoint is locked to the last three calendar months. Listener share is the more honest column: an app that re-requests files inflates its download share without representing more people.",
@@ -49,7 +48,7 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
       top: z.number().int().min(1).max(100).optional().default(20).describe("How many apps to return."),
       bots: z.boolean().optional().default(false).describe("Include known bots. Off by default."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -86,9 +85,9 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_device_breakdown",
     description:
       "How a show is consumed, across all four dimensions OP3 records: agentType (app, browser, bot), agentName (the specific app), deviceType (mobile, computer, tablet, smart speaker) and deviceName (Apple iPhone, Android Phone). One call returns all four, which is what you want for a picture of the audience rather than a single ranked list.",
@@ -105,7 +104,7 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
           "Include known bots. Worth turning on here specifically, since agentType is the dimension that shows how much bot traffic a feed attracts.",
         ),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
       const top = args.top as number;
@@ -142,9 +141,9 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         privacy: REDACTION_NOTE.note,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_global_app_share",
     description:
       "Podcast app market share across every show OP3 measures, over the last thirty days. This is the industry benchmark, not one show's numbers, and it is useful on its own for questions about the podcast app landscape. Can be narrowed to a single device to see which apps dominate on, say, an Apple iPhone.",
@@ -158,7 +157,7 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         .optional()
         .describe("Restrict to the device inferred from a raw user agent string."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const data = await ctx.client.getTopApps({
         deviceName: args.device_name as string | undefined,
         userAgent: args.user_agent as string | undefined,
@@ -179,9 +178,9 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         })),
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_benchmark_apps",
     description:
       "A show's app mix against OP3's global mix, with an index where 100 means exactly average. This is the tool that turns app share into something actionable. A show can be 40% Apple Podcasts and be under-indexed, because Apple is around 38% globally, so raw share hides the real story. Over-indexed apps are where this audience is unusual and where it can be reached deliberately.",
@@ -200,7 +199,7 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         ),
       bots: z.boolean().optional().default(false).describe("Include known bots. Off by default."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const showUuid = await ctx.resolveShowUuid(args.identifier as string);
       const window = buildWindow(args.start as string | undefined, args.end as string | undefined);
 
@@ -243,5 +242,5 @@ export function registerAppTools(server: McpServer, ctx: ToolContext): void {
         truncationNote: truncationNote(pull.truncated, pull.stoppedBy, pull.rows.length),
       };
     },
-  });
-}
+  },
+];

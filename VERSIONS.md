@@ -10,6 +10,21 @@
 zod stays on 3.x. The SDK's tool registration is built against it, and 4.x
 changes the shape the SDK reads.
 
+## 1.1.0, 2026-09-01
+
+Tools are now exported as data. `ALL_TOOLS` is an array of
+`{ name, description, schema, handler }`, and the handler takes its context as
+a second argument rather than closing over one.
+
+That is what lets a hosted connector reuse this package instead of
+reimplementing it. Over stdio there is one context for the process. Hosted,
+there is one per request, because each caller brings their own OP3 token, and a
+context baked in at module load would hand every caller the first one's
+credentials.
+
+No tool, argument or output changed. Minor rather than patch because the export
+surface grew.
+
 ## 1.0.1, 2026-08-31
 
 README only, no code change.

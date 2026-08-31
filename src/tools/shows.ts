@@ -9,11 +9,9 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { describeKind, resolveIdentifier } from "../api/identity.js";
 import { safeTitle } from "../format/frame.js";
-import type { ToolContext } from "./context.js";
-import { register } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 const identifierArg = z
   .string()
@@ -21,13 +19,13 @@ const identifierArg = z
     "The show, as any of: an OP3 show uuid (32 hex characters), a podcast:guid (the dashed UUID from the feed's <podcast:guid> tag), or the RSS feed URL itself. A plain feed URL is fine, it gets encoded for you.",
   );
 
-export function registerShowTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const SHOW_TOOLS: ToolDef[] = [
+  {
     name: "op3_resolve_show",
     description:
       "Turn any podcast identifier into an OP3 show uuid. Accepts a show uuid, a podcast:guid, or an RSS feed URL, and reports which kind it recognised. Use this first when you have a feed URL and need the uuid every other tool wants. If this fails, the show most likely does not have the OP3 prefix on its feed, which means OP3 has no data for it at all.",
     schema: { identifier: identifierArg },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const identifier = args.identifier as string;
       const parsed = resolveIdentifier(identifier);
       const show = await ctx.resolveShow(identifier);
@@ -40,9 +38,9 @@ export function registerShowTools(server: McpServer, ctx: ToolContext): void {
         statsPageUrl: show.statsPageUrl,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_get_show",
     description:
       "Look up a show on OP3: its uuid, title, podcast guid and public stats page. Set include_episodes to also get the episode list with OP3 episode ids, titles and publication dates. Episode ids from here are what the episode-level tools filter on.",
@@ -62,7 +60,7 @@ export function registerShowTools(server: McpServer, ctx: ToolContext): void {
         .default(25)
         .describe("Cap on episodes returned when include_episodes is true. Newest first."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const includeEpisodes = args.include_episodes as boolean;
       const limit = args.episode_limit as number;
       const show = await ctx.resolveShow(args.identifier as string, includeEpisodes);
@@ -90,9 +88,9 @@ export function registerShowTools(server: McpServer, ctx: ToolContext): void {
 
       return out;
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_list_episodes",
     description:
       "List a show's episodes with their OP3 episode ids, titles and publication dates, newest first. Use it to find the episode id for a specific episode before asking anything episode-level. Episode titles come from the publisher's RSS feed and are third-party text.",
@@ -111,7 +109,7 @@ export function registerShowTools(server: McpServer, ctx: ToolContext): void {
         .optional()
         .describe("Case-insensitive substring match on the episode title, applied before the limit."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const show = await ctx.resolveShow(args.identifier as string, true);
       const search = (args.search as string | undefined)?.toLowerCase().trim();
       const limit = args.limit as number;
@@ -134,5 +132,5 @@ export function registerShowTools(server: McpServer, ctx: ToolContext): void {
         })),
       };
     },
-  });
-}
+  },
+];

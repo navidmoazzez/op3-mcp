@@ -13,10 +13,8 @@
  */
 
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { safeTitle } from "../format/frame.js";
-import type { ToolContext } from "./context.js";
-import { register } from "./kit.js";
+import type { ToolDef } from "./kit.js";
 
 const identifierArg = z
   .string()
@@ -25,13 +23,13 @@ const identifierArg = z
 const ROLLUP_LAG_NOTE =
   "OP3 rebuilds these counts once a day, so `asof` is usually yesterday. Numbers here will not match a live dashboard exactly, and bots are already excluded.";
 
-export function registerDownloadTools(server: McpServer, ctx: ToolContext): void {
-  register(server, {
+export const DOWNLOAD_TOOLS: ToolDef[] = [
+  {
     name: "op3_show_downloads",
     description:
       "A show's headline download numbers: downloads in the last 30 days, the week-by-week breakdown over the last four weeks, and the weekly average. This is the fast answer to 'how many downloads does my show get' and should be preferred over the raw query tools whenever it can answer the question. Excludes bots. Updated once a day.",
     schema: { identifier: identifierArg },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const show = await ctx.resolveShow(args.identifier as string);
       const data = await ctx.client.getShowDownloadCounts([show.showUuid]);
       const counts = data.showDownloadCounts ?? {};
@@ -67,9 +65,9 @@ export function registerDownloadTools(server: McpServer, ctx: ToolContext): void
         note: ROLLUP_LAG_NOTE,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_episode_downloads",
     description:
       "Per-episode download counts for a show's recent episodes: downloads in the first 1, 3, 7 and 30 days after publication, plus all-time. Use it to compare how episodes performed at equal age. Note that an empty result is normal for a small or new show, it means OP3's daily rollup has not covered it yet rather than that there is no data.",
@@ -84,7 +82,7 @@ export function registerDownloadTools(server: McpServer, ctx: ToolContext): void
         .default(20)
         .describe("How many episodes to return, newest first."),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const show = await ctx.resolveShow(args.identifier as string);
       const data = await ctx.client.getEpisodeDownloadCounts(show.showUuid);
       const episodes = data.episodes ?? [];
@@ -117,9 +115,9 @@ export function registerDownloadTools(server: McpServer, ctx: ToolContext): void
         note: ROLLUP_LAG_NOTE,
       };
     },
-  });
+  },
 
-  register(server, {
+  {
     name: "op3_compare_shows",
     description:
       "Compare several shows side by side on monthly downloads and weekly average, ranked. OP3 accepts many shows in one request, so this is one call rather than several. Useful for benchmarking a show against others in its category, or for tracking a portfolio of shows at once.",
@@ -132,7 +130,7 @@ export function registerDownloadTools(server: McpServer, ctx: ToolContext): void
           "Two to twenty shows, each as a uuid, podcast:guid or feed URL. Anything that is not already a uuid costs one extra lookup.",
         ),
     },
-    handler: async (args) => {
+    handler: async (args, ctx) => {
       const identifiers = args.identifiers as string[];
 
       // Resolve first so a feed URL or guid works here too, reporting per-show
@@ -188,5 +186,5 @@ export function registerDownloadTools(server: McpServer, ctx: ToolContext): void
         note: ROLLUP_LAG_NOTE,
       };
     },
-  });
-}
+  },
+];
