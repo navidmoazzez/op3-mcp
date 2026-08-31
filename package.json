@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "op3-mcp": "./dist/index.js"
+    "op3-mcp": "dist/index.js"
   },
   "engines": {
     "node": ">=20"

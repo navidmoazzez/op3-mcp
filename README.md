@@ -1,5 +1,12 @@
 # OP3 MCP
 
+[![Stars](https://img.shields.io/github/stars/thenavidm/op3-mcp?style=flat&logo=github&label=Stars)](https://github.com/thenavidm/op3-mcp)
+[![License](https://img.shields.io/badge/License-MIT-blue)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/@thenavidm/op3-mcp?color=orange&label=npm)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
+[![Downloads](https://img.shields.io/npm/dm/@thenavidm/op3-mcp?color=green&label=downloads)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
+[![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
+[![X](https://img.shields.io/badge/X-@thenavidm-black?logo=x)](https://x.com/thenavidm)
+
 Open podcast analytics for AI agents. 22 tools over [OP3](https://op3.dev), the
 Open Podcast Prefix Project, including unique listeners, retention cohorts and
 episode benchmark curves that OP3's own API does not expose.
@@ -24,10 +31,6 @@ Claude:  213 downloads over the last 30 days, from 209 unique listeners.
 ```
 
 Built by [Navid Moazzez](https://navid.me).
-
-> **Not on npm yet.**
-> The install commands below name a package that has not been published.
-> Until it is, use the build-from-source block in section 2.
 
 ## Contents
 
@@ -65,28 +68,23 @@ OP3's own aggregated endpoints expose that, and this server does.
 
 Node 20 or newer. Nothing else.
 
-Once published, the whole install is:
-
 ```bash
 npx -y @thenavidm/op3-mcp@latest --version
 ```
 
-`npx` fetches it on demand, so there is nothing to update later.
+That is the whole install. `npx` fetches it on demand, so there is nothing to
+update later: with `@latest`, a new version reaches you the next time your
+client starts the server.
 
-Until then, build from source:
+To build from source instead:
 
 ```bash
 git clone https://github.com/thenavidm/op3-mcp.git
 cd op3-mcp
 npm install
 npm run build
-node dist/index.js --version
-```
-
-Run the tests while you are there:
-
-```bash
 npm test
+node dist/index.js --version
 ```
 
 ## 3. Setup 🔑
@@ -439,36 +437,45 @@ npx -y @thenavidm/op3-mcp@latest doctor
 
 ## FAQ ❓
 
-**What is an MCP server?** Model Context Protocol is a standard for giving an AI
-assistant tools. An MCP server exposes a set of them, and any MCP client can
-connect to it. This one exposes 22 read-only tools over OP3.
+**What is an MCP server?**
 
-**Do I need a podcast?** No. The token reads public OP3 data, which covers every
-show that has the prefix on its feed.
+Model Context Protocol is a standard for giving an AI assistant tools. An MCP server exposes a set of them, and any MCP client can connect to it. This one exposes 22 read-only tools over OP3.
 
-**Do I need an OP3 account?** No, though you should get a token. Without one the
-server uses OP3's shared preview token, which is rate limited.
+**Do I need a podcast?**
 
-**Does this work with my hosting platform?** It works with any podcast whose
-feed carries the OP3 prefix, whoever hosts it.
+No. The token reads public OP3 data, which covers every show that has the prefix on its feed.
 
-**Why are the numbers different from Apple or Spotify?** Those report only their
-own listeners. OP3 sits in front of the audio file, so it sees every download
-regardless of app.
+**Do I need an OP3 account?**
 
-**Can it write anything?** No. OP3's API is read-only and so is this.
+No, though you should get a token. Without one the server uses OP3's shared preview token, which is rate limited.
 
-**Is my listener data exposed to the model?** No. Per-listener identifiers are
-aggregated inside the server and stripped from every response.
+**Does this work with my hosting platform?**
 
-**Why is it slow sometimes?** The raw endpoints are scans. Cost grows with the
-window. The rolled-up tools answer in milliseconds; prefer them.
+It works with any podcast whose feed carries the OP3 prefix, whoever hosts it.
 
-**Does it work with claude.ai?** Yes, over the HTTP transport, which needs a
-public HTTPS URL. See section 4.
+**Why are the numbers different from Apple or Spotify?**
 
-**How do I update it?** With `@latest` in the install line, the next published
-version reaches you the next time your client starts the server.
+Those report only their own listeners. OP3 sits in front of the audio file, so it sees every download regardless of app.
+
+**Can it write anything?**
+
+No. OP3's API is read-only and so is this.
+
+**Is my listener data exposed to the model?**
+
+No. Per-listener identifiers are aggregated inside the server and stripped from every response.
+
+**Why is it slow sometimes?**
+
+The raw endpoints are scans. Cost grows with the window. The rolled-up tools answer in milliseconds; prefer them.
+
+**Does it work with claude.ai?**
+
+Yes, over the HTTP transport, which needs a public HTTPS URL. See section 4.
+
+**How do I update it?**
+
+With `@latest` in the install line, the next published version reaches you the next time your client starts the server.
 
 ## About the author 👋
 
@@ -491,16 +498,20 @@ Navid Moazzez is a leading AI business strategist and the host of the AI Creator
 
 ## Dependencies
 
-| Package | Licence | Why |
+| Library | Licence | What it does |
 |---|---|---|
-| [@modelcontextprotocol/sdk](https://github.com/modelcontextprotocol/typescript-sdk) | MIT | The MCP protocol implementation, stdio and streamable HTTP transports |
-| [zod](https://github.com/colinhacks/zod) | MIT | Tool argument schemas, which the SDK turns into the JSON Schema clients see |
+| [MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk) | MIT | The MCP server and transports |
+| [zod](https://github.com/colinhacks/zod) | MIT | Tool argument schemas and validation |
 
-Data comes from [OP3](https://op3.dev), an MIT-licensed open source project by
-John Spurlock. This server is not affiliated with it.
+Nothing else. The OP3 client, the pagination, the aggregation and the time
+handling are all built in, so the install is two packages deep.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+[MIT](https://github.com/thenavidm/op3-mcp/blob/main/LICENSE). Free to use, modify, and share.
+
+Not affiliated with, endorsed by, or connected to the Open Podcast Prefix Project.
+
+---
 
 © 2026 NM Media. Made with ❤️ by [Navid Moazzez](https://navid.me).
