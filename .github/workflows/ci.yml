@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+
+  smoke:
+    # The build passing says nothing about whether the server starts and lists
+    # its tools, which is the failure a user would actually hit. No token is
+    # set, which also proves the unconfigured path works.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+      - name: Server starts and lists every tool
+        run: |
+          printf '%s\n%s\n' \
+            '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"1"}}}' \
+            '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            | node dist/index.js 2>/dev/null \
+            | node -e '
+              let raw = "";
+              process.stdin.on("data", c => raw += c);
+              process.stdin.on("end", () => {
+                const listed = raw.trim().split("\n").map(l => JSON.parse(l)).find(m => m.id === 2);
+                const tools = listed?.result?.tools ?? [];
+                console.log(`tools: ${tools.length}`);
+                if (tools.length !== 22) {
+                  console.error(`expected 22 tools, got ${tools.length}`);
+                  process.exit(1);
+                }
+                const undescribed = tools.filter(t => !t.description);
+                if (undescribed.length) {
+                  console.error("no description: " + undescribed.map(t => t.name).join(", "));
+                  process.exit(1);
+                }
+                // Every tool here is a read. A write annotation would mean a
+                // client could be asked to auto-approve something that changes
+                // state, which nothing in this server does.
+                const notRead = tools.filter(t => t.annotations?.readOnlyHint !== true);
+                if (notRead.length) {
+                  console.error("not annotated read-only: " + notRead.map(t => t.name).join(", "));
+                  process.exit(1);
+                }
+              });
+            '
+
+      - name: Doctor runs without a token
+        run: node dist/index.js doctor
+
+      - name: Help and version do not need the network
+        run: |
+          node dist/index.js --version
+          node dist/index.js --help > /dev/null
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build -t op3-mcp:ci .
