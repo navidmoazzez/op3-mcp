@@ -479,12 +479,11 @@ With `@latest` in the install line, the next published version reaches you the n
 
 ## About the author 👋
 
-Navid Moazzez is a leading AI business strategist and the host of the AI Creator Summit, watched by 100,000+ creators. He helps creators and founders master AI and build their own AI Operating System (AI OS) to automate their business and life. This MCP server is one piece of that system.
+Navid Moazzez is a leading AI business strategist, and the host of the AI Creator Summit, watched by 100,000+ creators. He helps creators and founders master AI and build their own AI Operating System (AI OS) to automate their business and life. This MCP server is one piece of that system.
 
 **Links**
 
 - Personal website: [navid.me](https://navid.me)
-- Store: [navid.bio](https://navid.bio)
 - Navid Media: [navid.media](https://navid.media)
 - YouTube: [@thenavidm](https://youtube.com/@thenavidm?sub_confirmation=1) and [@thenavidai](https://youtube.com/@thenavidai?sub_confirmation=1)
 - X: [@thenavidm](https://x.com/thenavidm)
