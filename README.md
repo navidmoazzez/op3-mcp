@@ -437,45 +437,79 @@ npx -y @thenavidm/op3-mcp@latest doctor
 
 ## FAQ ❓
 
-**What is an MCP server?**
+<details>
+<summary><b>What is an MCP server?</b></summary>
 
-Model Context Protocol is a standard for giving an AI assistant tools. An MCP server exposes a set of them, and any MCP client can connect to it. This one exposes 22 read-only tools over OP3.
+An MCP server is a standard way to give an AI assistant tools it can actually call. Model Context Protocol is the agreement they speak, so any MCP client connects to any MCP server. This one exposes 22 read-only tools over OP3.
 
-**Do I need a podcast?**
+</details>
 
-No. The token reads public OP3 data, which covers every show that has the prefix on its feed.
+<details>
+<summary><b>Do I need a podcast?</b></summary>
 
-**Do I need an OP3 account?**
+It does not. The token reads public OP3 data, which covers every show that has the prefix on its feed.
 
-No, though you should get a token. Without one the server uses OP3's shared preview token, which is rate limited.
+</details>
 
-**Does this work with my hosting platform?**
+<details>
+<summary><b>Do I need an OP3 account?</b></summary>
+
+You do not need an account, though you should get a token. Without one the server uses OP3's shared preview token, which is rate limited.
+
+</details>
+
+<details>
+<summary><b>Does this work with my hosting platform?</b></summary>
 
 It works with any podcast whose feed carries the OP3 prefix, whoever hosts it.
 
-**Why are the numbers different from Apple or Spotify?**
+</details>
+
+<details>
+<summary><b>Why are the numbers different from Apple or Spotify?</b></summary>
 
 Those report only their own listeners. OP3 sits in front of the audio file, so it sees every download regardless of app.
 
-**Can it write anything?**
+</details>
 
-No. OP3's API is read-only and so is this.
+<details>
+<summary><b>Can it write anything?</b></summary>
 
-**Is my listener data exposed to the model?**
+It does not. OP3's API is read-only and so is this.
 
-No. Per-listener identifiers are aggregated inside the server and stripped from every response.
+</details>
 
-**Why is it slow sometimes?**
+<details>
+<summary><b>Is my listener data exposed to the model?</b></summary>
+
+It does not. Per-listener identifiers are aggregated inside the server and stripped from every response.
+
+</details>
+
+<details>
+<summary><b>Why is it slow sometimes?</b></summary>
 
 The raw endpoints are scans. Cost grows with the window. The rolled-up tools answer in milliseconds; prefer them.
 
-**Does it work with claude.ai?**
+</details>
 
-Yes, over the HTTP transport, which needs a public HTTPS URL. See section 4.
+<details>
+<summary><b>Does it work with claude.ai?</b></summary>
 
-**How do I update it?**
+It works over the HTTP transport, which needs a public HTTPS URL. See section 4.
+
+</details>
+
+<details>
+<summary><b>How do I update it?</b></summary>
 
 With `@latest` in the install line, the next published version reaches you the next time your client starts the server.
+
+</details>
+
+## Questions
+
+Run into a problem or have a question? [Open an issue](https://github.com/navidmoazzez/op3-mcp/issues) and I will help.
 
 ## About the author 👋
 
