@@ -546,4 +546,4 @@ Not affiliated with, endorsed by, or connected to the Open Podcast Prefix Projec
 
 ---
 
-© 2026 NM Media. Made with ❤️ by [Navid Moazzez](https://navid.me).
+© 2026 [NM Media](https://navid.media). Made with ❤️ by [Navid Moazzez](https://navid.me).
