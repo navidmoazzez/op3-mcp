@@ -135,7 +135,7 @@ export function listeningPatterns(rows: DownloadRow[]): ListeningPatterns {
     byHourUtc,
     byWeekday,
     ...(counted > 0 ? { busiestHourUtc: busiestHour.hour, busiestWeekday: busiestDay.weekday } : {}),
-    note: "Times are UTC. A download is when an app fetched the file, which for a scheduled background refresh is not when a person pressed play. Read this as request timing, not listening behaviour.",
+    note: "Times are UTC. A download is when an app fetched the file, which for a scheduled background refresh is not when a person pressed play. Read this as request timing, not listening behavior.",
   };
 }
 

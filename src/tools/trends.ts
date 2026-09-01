@@ -74,7 +74,7 @@ export const TREND_TOOLS: ToolDef[] = [
   {
     name: "op3_listening_patterns",
     description:
-      "When downloads happen, by hour of day and day of week, in UTC. Useful for choosing a publication slot. Read it as request timing rather than listening behaviour: a podcast app's scheduled background refresh fires on the app's schedule, not when a person pressed play, so the peaks partly reflect app defaults.",
+      "When downloads happen, by hour of day and day of week, in UTC. Useful for choosing a publication slot. Read it as request timing rather than listening behavior: a podcast app's scheduled background refresh fires on the app's schedule, not when a person pressed play, so the peaks partly reflect app defaults.",
     schema: {
       identifier: identifierArg,
       start: z.string().optional().describe("Window start, e.g. -30d. Defaults to -30d."),

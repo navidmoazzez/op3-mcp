@@ -23,7 +23,7 @@ export const SHOW_TOOLS: ToolDef[] = [
   {
     name: "op3_resolve_show",
     description:
-      "Turn any podcast identifier into an OP3 show uuid. Accepts a show uuid, a podcast:guid, or an RSS feed URL, and reports which kind it recognised. Use this first when you have a feed URL and need the uuid every other tool wants. If this fails, the show most likely does not have the OP3 prefix on its feed, which means OP3 has no data for it at all.",
+      "Turn any podcast identifier into an OP3 show uuid. Accepts a show uuid, a podcast:guid, or an RSS feed URL, and reports which kind it recognized. Use this first when you have a feed URL and need the uuid every other tool wants. If this fails, the show most likely does not have the OP3 prefix on its feed, which means OP3 has no data for it at all.",
     schema: { identifier: identifierArg },
     handler: async (args, ctx) => {
       const identifier = args.identifier as string;
@@ -31,7 +31,7 @@ export const SHOW_TOOLS: ToolDef[] = [
       const show = await ctx.resolveShow(identifier);
       return {
         input: identifier,
-        recognisedAs: describeKind(parsed.kind),
+        recognizedAs: describeKind(parsed.kind),
         showUuid: show.showUuid,
         title: show.title,
         podcastGuid: show.podcastGuid,

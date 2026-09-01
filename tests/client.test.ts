@@ -1,5 +1,5 @@
 /**
- * Client behaviour against a faked transport. Never the network.
+ * Client behavior against a faked transport. Never the network.
  *
  * Three of these are regressions for bugs that only showed up against the live
  * API and would have shipped otherwise: `bots=true` is rejected by OP3 and the

@@ -129,7 +129,7 @@ describe("trend", () => {
     expect(series([], "day").growthRate).toBe(0);
   });
 
-  it("labels listening patterns as UTC request timing, not behaviour", () => {
+  it("labels listening patterns as UTC request timing, not behavior", () => {
     const p = listeningPatterns([row({ time: "2026-08-31T10:00:00.000Z" })]);
     expect(p.busiestHourUtc).toBe(10);
     expect(p.byHourUtc).toHaveLength(24);

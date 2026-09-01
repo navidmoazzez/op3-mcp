@@ -178,7 +178,7 @@ export const RAW_TOOLS: ToolDef[] = [
         });
         return {
           identifier,
-          recognisedAs: parsed.kind,
+          recognizedAs: parsed.kind,
           healthy: false,
           checks,
           diagnosis:
@@ -230,7 +230,7 @@ export const RAW_TOOLS: ToolDef[] = [
 
       return {
         identifier,
-        recognisedAs: parsed.kind,
+        recognizedAs: parsed.kind,
         showUuid,
         showTitle: safeTitle(showTitle),
         healthy,
