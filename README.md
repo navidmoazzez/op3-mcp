@@ -14,7 +14,7 @@ That is why its numbers differ from Apple's or Spotify's, which each report only
 22 tools, including unique listeners, retention cohorts and episode benchmark curves that OP3's own API does not expose.
 
 
-Built and maintained by [Navid Moazzez](https://navid.me).
+Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp).
 
 ```
 You:  How is my podcast actually doing this month?
@@ -521,8 +521,8 @@ Navid Moazzez is a leading AI business strategist, and the host of the AI Creato
 
 **Links**
 
-- Personal website: [navid.me](https://navid.me)
-- Navid Media: [navid.media](https://navid.media)
+- Personal website: [navid.me](https://navid.me?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp)
+- Navid Media: [navid.media](https://navid.media?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp)
 - YouTube: [@thenavidm](https://youtube.com/@thenavidm?sub_confirmation=1) and [@thenavidai](https://youtube.com/@thenavidai?sub_confirmation=1)
 - X: [@thenavidm](https://x.com/thenavidm)
 - Instagram: [@thenavidm](https://instagram.com/thenavidm)
@@ -546,4 +546,4 @@ Not affiliated with, endorsed by, or connected to the Open Podcast Prefix Projec
 
 ---
 
-© 2026 [NM Media](https://navid.media). Made with ❤️ by [Navid Moazzez](https://navid.me).
+© 2026 [NM Media](https://navid.media?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp). Made with ❤️ by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp).
