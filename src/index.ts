@@ -34,7 +34,7 @@ Options:
   OP3_CACHE_TTL_MS            response cache lifetime, default 300000, 0 disables
   OP3_HTTP_PORT / _HOST / _TOKEN   for --http
 
-https://github.com/thenavidm/op3-mcp
+https://github.com/navidmoazzez/op3-mcp
 `;
 
 async function main(): Promise<void> {

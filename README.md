@@ -1,7 +1,7 @@
 # OP3 MCP
 
-[![Stars](https://img.shields.io/github/stars/thenavidm/op3-mcp?style=flat&logo=github&label=Stars)](https://github.com/thenavidm/op3-mcp)
-[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/thenavidm/op3-mcp/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/navidmoazzez/op3-mcp?style=flat&logo=github&label=Stars)](https://github.com/navidmoazzez/op3-mcp)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/navidmoazzez/op3-mcp/blob/main/LICENSE)
 [![npm](https://img.shields.io/npm/v/@thenavidm/op3-mcp?color=orange&label=npm)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
 [![Downloads](https://img.shields.io/npm/dm/@thenavidm/op3-mcp?color=green&label=downloads)](https://www.npmjs.com/package/@thenavidm/op3-mcp)
 [![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
@@ -79,7 +79,7 @@ client starts the server.
 To build from source instead:
 
 ```bash
-git clone https://github.com/thenavidm/op3-mcp.git
+git clone https://github.com/navidmoazzez/op3-mcp.git
 cd op3-mcp
 npm install
 npm run build
@@ -502,7 +502,7 @@ handling are all built in, so the install is two packages deep.
 
 ## License
 
-[MIT](https://github.com/thenavidm/op3-mcp/blob/main/LICENSE). Free to use, modify, and share.
+[MIT](https://github.com/navidmoazzez/op3-mcp/blob/main/LICENSE). Free to use, modify, and share.
 
 Not affiliated with, endorsed by, or connected to the Open Podcast Prefix Project.
 
