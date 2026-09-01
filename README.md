@@ -1,3 +1,5 @@
+<img src="https://cdn.navid.media/connectors/op3-icon.png" alt="OP3" width="88">
+
 # OP3 MCP
 
 [![Stars](https://img.shields.io/github/stars/navidmoazzez/op3-mcp?style=flat&logo=github&label=Stars)](https://github.com/navidmoazzez/op3-mcp)
