@@ -7,9 +7,14 @@
 [![YouTube](https://img.shields.io/badge/YouTube-@thenavidm-red?logo=youtube&logoColor=white)](https://youtube.com/@thenavidm?sub_confirmation=1)
 [![X](https://img.shields.io/badge/X-@thenavidm-black?logo=x)](https://x.com/thenavidm)
 
-Open podcast analytics for AI agents. 22 tools over [OP3](https://op3.dev), the
-Open Podcast Prefix Project, including unique listeners, retention cohorts and
-episode benchmark curves that OP3's own API does not expose.
+[OP3](https://op3.dev) sits in front of the audio file, so it counts every download whatever app made it.
+
+That is why its numbers differ from Apple's or Spotify's, which each report only their own listeners.
+
+22 tools, including unique listeners, retention cohorts and episode benchmark curves that OP3's own API does not expose.
+
+
+Built and maintained by [Navid Moazzez](https://navid.me).
 
 ```
 You:  How is my podcast actually doing this month?
@@ -30,7 +35,6 @@ Claude:  213 downloads over the last 30 days, from 209 unique listeners.
          podcast app.
 ```
 
-Built by [Navid Moazzez](https://navid.me).
 
 ## Contents
 
