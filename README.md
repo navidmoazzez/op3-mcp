@@ -44,10 +44,10 @@ Claude:  213 downloads over the last 30 days, from 209 unique listeners.
 3. [Setup](#3-setup-)
 4. [Connect your client](#4-connect-your-client-)
 5. [Check it worked](#5-check-it-worked-)
-6. [Tools](#6-tools-)
-7. [Reading the numbers](#7-reading-the-numbers-)
-8. [Your data](#8-your-data-)
-9. [Troubleshooting](#9-troubleshooting-)
+6. [Tools](#7-tools-)
+7. [Reading the numbers](#8-reading-the-numbers-)
+8. [Your data](#9-your-data-)
+9. [Troubleshooting](#10-troubleshooting-)
 
 ## 1. What you can ask it 💬
 
@@ -275,7 +275,29 @@ settings in force.
 | Numbers do not match the OP3 dashboard | Rolled-up figures lag by about a day. Check the `asof` field |
 | `npx` not found in Claude Desktop | Desktop does not inherit your shell PATH. Use the absolute path |
 
-## 6. Tools 🛠️
+## 6. What it costs to have connected
+
+Every MCP server sends its whole tool list to the model on **every turn**,
+whether you mention it or not. Measured on this one:
+
+| | Sent per turn |
+|---|---|
+| 22 tool definitions, plus the server instructions | **~7,500 tokens** |
+
+That is the price of it being connected at all, before you ask anything. It is
+not unusual, and almost nobody publishes it.
+
+Two ways to spend less.
+
+**Turn it off when you are not using it.** In Claude Code that is
+`@op3` to toggle, and every client has an equivalent.
+
+**Or reach for a shell instead.** A command is not in the context window, so it
+costs nothing on the turns you do not use it. It is not free either: an agent
+still needs the skill file, roughly 1,200 tokens, but only once the subject
+comes up rather than on every turn regardless.
+
+## 7. Tools 🛠️
 
 Every tool is a read. Nothing here changes anything.
 
@@ -335,7 +357,7 @@ The tools OP3's own API cannot give you.
 | `op3_query_downloads` | Raw download rows, every filter OP3 offers. The escape hatch |
 | `op3_query_hits` | Raw request log across OP3. A verification surface, not an analytics one |
 
-## 7. Reading the numbers 📊
+## 8. Reading the numbers 📊
 
 The part worth more than the upstream API docs. All of it was found by probing
 the live API, because OP3's OpenAPI document declares no response schemas.
@@ -384,7 +406,7 @@ Cost grows with the window. The server pages with a continuation token, caps
 what it will pull, and labels any result that was cut short, because a truncated
 result presented as complete makes every rate computed from it wrong.
 
-## 8. Your data 🔐
+## 9. Your data 🔐
 
 There is no backend. The server runs on your machine, talks to `op3.dev`, and
 stores nothing on disk.
@@ -424,7 +446,7 @@ that this server is read-only and reaches nothing but OP3.
 | `OP3_HTTP_HOST` | 127.0.0.1 | Bind address for `--http` |
 | `OP3_HTTP_TOKEN` | none | Require this bearer token on HTTP requests |
 
-## 9. Troubleshooting 🔧
+## 10. Troubleshooting 🔧
 
 Run `doctor` first. It names the problem in one command.
 
