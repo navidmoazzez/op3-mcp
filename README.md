@@ -138,6 +138,8 @@ through the prefix, OP3 has no data for your show and neither does this.
 
 ## 4. Connect your client 🔌
 
+The long version, every step with what to do when one fails, is in [references/setup.md](references/setup.md).
+
 `OP3_TOKEN` is optional in every block below. Leave it out to use OP3's preview
 token.
 
