@@ -18,24 +18,7 @@ That is why its numbers differ from Apple's or Spotify's, which each report only
 
 Built and maintained by [Navid Moazzez](https://navid.me?utm_source=github&utm_medium=readme&utm_campaign=op3-mcp).
 
-```
-You:  How is my podcast actually doing this month?
-
-Claude:  213 downloads over the last 30 days, from 209 unique listeners.
-         That ratio of 1.02 is unusually clean: nearly every download is a
-         distinct person rather than an app re-fetching.
-
-         Week by week: 1, 3, 101, 108. The second half of the window is
-         well ahead of the first.
-
-         Your audience is spread across 132 regions. Sao Paulo is the
-         largest single one at 5.6%, then Dhaka and Punjab.
-
-         One thing worth knowing: 96% of downloads come through Chrome,
-         against 7.5% across all podcasts. That is a 12.9x over-index, and
-         it means people are listening on your web page rather than in a
-         podcast app.
-```
+<img src="https://cdn.navid.media/repos/op3-mcp.gif?v=1" alt="Claude Code using the OP3 MCP server" width="520">
 
 ## Contents
 
