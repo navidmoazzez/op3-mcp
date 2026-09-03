@@ -34,10 +34,10 @@
   "homepage": "https://navid.me",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/navidmoazzez/op3-mcp.git"
+    "url": "git+https://github.com/thenavidm/op3-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/navidmoazzez/op3-mcp/issues"
+    "url": "https://github.com/thenavidm/op3-mcp/issues"
   },
   "keywords": [
     "mcp",
