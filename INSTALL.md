@@ -1,4 +1,6 @@
-# Getting an OP3 token, and getting your podcast into OP3
+# Install
+
+## Getting an OP3 token, and getting your podcast into OP3
 
 Two separate things, and most people only need the first.
 
